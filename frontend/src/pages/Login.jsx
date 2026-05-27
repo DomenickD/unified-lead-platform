@@ -157,6 +157,16 @@ export default function Login({ onLogin }) {
               </button>
             </form>
 
+            {/* Dev shortcut */}
+            <button
+              onClick={() => handleSubmit({ preventDefault: () => {} })}
+              className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 border border-dashed border-outline-variant rounded-sm text-on-surface-variant hover:bg-surface-container-low transition-colors"
+              style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px' }}
+            >
+              <span className="material-symbols-outlined text-[16px]">developer_mode</span>
+              DEV — Skip Login
+            </button>
+
             {/* SSO Divider */}
             <div className="relative my-10">
               <div className="absolute inset-0 flex items-center">

@@ -19,6 +19,11 @@ export default function App() {
     setAuthenticated(true)
   }
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('cs_auth')
+    setAuthenticated(false)
+  }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -28,7 +33,7 @@ export default function App() {
         />
         <Route
           path="/"
-          element={authenticated ? <AppShell /> : <Navigate to="/login" replace />}
+          element={authenticated ? <AppShell onLogout={handleLogout} /> : <Navigate to="/login" replace />}
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
