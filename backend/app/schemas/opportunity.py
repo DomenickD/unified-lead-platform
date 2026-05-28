@@ -15,6 +15,8 @@ class OpportunityBase(BaseModel):
     sector: OpportunitySector
     confidence: float
     flagged: bool = False
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class OpportunityCreate(OpportunityBase):
@@ -27,6 +29,8 @@ class OpportunityUpdate(BaseModel):
     sector: Optional[OpportunitySector] = None
     confidence: Optional[float] = None
     flagged: Optional[bool] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class Opportunity(OpportunityBase):

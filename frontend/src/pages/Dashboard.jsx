@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import MetricCard from '../components/ui/MetricCard'
 import Badge from '../components/ui/Badge'
 import ProgressBar from '../components/ui/ProgressBar'
@@ -13,6 +15,16 @@ function fmt(n) {
 export default function Dashboard() {
   const { metrics, regions, pipelines, loading: dashLoading } = useDashboard()
   const { opportunities, loading: oppLoading } = useOpportunities()
+  const navigate = useNavigate()
+  const [showBriefing, setShowBriefing] = useState(false)
+
+  const handleExportPDF = () => {
+    alert('Generating and exporting institutional PDF report for the Tampa Bay region...')
+  }
+
+  const handleFilterViews = () => {
+    alert('Opening filters: In-state Tampa exclusive leads & opportunities filters applied.')
+  }
 
   if (dashLoading || oppLoading) {
     return <div className="text-on-surface-variant text-sm">Loading...</div>
@@ -27,11 +39,17 @@ export default function Dashboard() {
           <p className="text-on-surface-variant text-sm mt-1">Cross-sector capital allocation and active pipeline tracking.</p>
         </div>
         <div className="flex gap-2">
-          <button className="bg-white border border-outline-variant px-4 py-2 text-[13px] font-semibold rounded flex items-center gap-2 hover:bg-surface-container-low transition-colors">
+          <button 
+            onClick={handleFilterViews}
+            className="bg-white border border-outline-variant px-4 py-2 text-[13px] font-semibold rounded flex items-center gap-2 hover:bg-surface-container-low transition-colors"
+          >
             <span className="material-symbols-outlined text-[18px]">filter_list</span>
             Filter Views
           </button>
-          <button className="bg-white border border-outline-variant px-4 py-2 text-[13px] font-semibold rounded flex items-center gap-2 hover:bg-surface-container-low transition-colors">
+          <button 
+            onClick={handleExportPDF}
+            className="bg-white border border-outline-variant px-4 py-2 text-[13px] font-semibold rounded flex items-center gap-2 hover:bg-surface-container-low transition-colors"
+          >
             <span className="material-symbols-outlined text-[18px]">download</span>
             Export PDF
           </button>
@@ -75,9 +93,9 @@ export default function Dashboard() {
         <div className="col-span-12 lg:col-span-8 bg-white border border-outline-variant rounded-lg flex flex-col">
           <div className="p-4 border-b border-outline-variant flex justify-between items-center">
             <h3 className="text-[18px] font-semibold">Recent Opportunities</h3>
-            <button className="text-primary text-[11px] font-semibold tracking-widest uppercase hover:underline">
+            <Link to="/leads" className="text-primary text-[11px] font-bold tracking-widest uppercase hover:underline">
               View All Leads
-            </button>
+            </Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -100,8 +118,12 @@ export default function Dashboard() {
                       <ProgressBar value={opp.confidence} variant={opp.flagged ? 'error' : 'secondary'} />
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <button className={`material-symbols-outlined ${opp.flagged ? 'text-error hover:text-on-error-container' : 'text-primary hover:text-secondary'}`}>
-                        {opp.flagged ? 'report' : 'open_in_new'}
+                      <button 
+                        onClick={() => navigate('/map')}
+                        className={`material-symbols-outlined ${opp.flagged ? 'text-error hover:text-on-error-container' : 'text-primary hover:text-secondary'}`}
+                        title="View on Interactive Map"
+                      >
+                        {opp.flagged ? 'report' : 'map'}
                       </button>
                     </td>
                   </tr>
@@ -134,9 +156,10 @@ export default function Dashboard() {
               ))}
             </div>
 
-            <div className="mt-6 h-32 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant text-sm border border-outline-variant">
-              Map placeholder
-            </div>
+            <Link to="/map" className="mt-6 h-32 bg-surface-container rounded-lg flex flex-col items-center justify-center text-on-surface-variant text-sm border border-outline-variant hover:border-primary hover:text-primary transition-all">
+              <span className="material-symbols-outlined text-3xl">explore</span>
+              <span className="font-semibold text-xs mt-1">Open Interactive Map View</span>
+            </Link>
           </div>
 
           {/* Macro Signal Card */}
@@ -146,12 +169,15 @@ export default function Dashboard() {
               <span className="text-[11px] font-semibold tracking-widest uppercase">Macro Signal</span>
             </div>
             <p className="text-[16px] font-bold leading-tight">
-              Construction costs in Florida expected to plateau by Q3 2024.
+              Construction costs in Florida expected to plateau by Q3 2026.
             </p>
             <p className="text-[12px] opacity-70 mt-2">
               Based on current commodity futures and regional logistics throughput.
             </p>
-            <button className="mt-4 w-full py-2 bg-on-primary-container text-primary text-[11px] font-semibold tracking-widest uppercase rounded hover:opacity-90 transition-opacity">
+            <button 
+              onClick={() => setShowBriefing(true)}
+              className="mt-4 w-full py-2 bg-on-primary-container text-primary text-[11px] font-semibold tracking-widest uppercase rounded hover:opacity-90 transition-opacity"
+            >
               Read Full Briefing
             </button>
           </div>
@@ -179,6 +205,50 @@ export default function Dashboard() {
           )
         })}
       </div>
+
+      {/* Macro Briefing Modal */}
+      {showBriefing && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white border border-outline-variant rounded-2xl w-full max-w-lg p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center border-b border-outline-variant pb-3">
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">insights</span>
+                Florida Macro Economic Briefing
+              </h3>
+              <button 
+                onClick={() => setShowBriefing(false)}
+                className="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-1.5 rounded-full transition-colors"
+              >
+                close
+              </button>
+            </div>
+            
+            <div className="space-y-3 text-sm text-on-surface-variant overflow-y-auto max-h-96 pr-2 leading-relaxed">
+              <p className="font-semibold text-on-surface">
+                Subject: Construction Commodities & Labor Logistics Through Q3 2026.
+              </p>
+              <p>
+                Our macro analysts indicate that structural concrete and lumber futures have stabilized across the Southeastern US. Specifically, the ports of Tampa and Jacksonville report a 15% increase in throughput, easing previous regional supply chain backlogs.
+              </p>
+              <p>
+                While commercial labor remains highly competitive in key Florida metro corridors, secondary market velocities (residential infill, suburban commercial development) are cooling to sustainable historical averages.
+              </p>
+              <p>
+                <strong>Recommendation:</strong> Allocate Capital towards shovel-ready urban infill and municipal grants in the Tampa Bay exclusive zone, capitalizing on the stabilization of materials pricing.
+              </p>
+            </div>
+
+            <div className="flex justify-end pt-3 border-t border-outline-variant">
+              <button
+                onClick={() => setShowBriefing(false)}
+                className="px-5 py-2.5 bg-primary text-on-primary rounded-lg text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity"
+              >
+                Acknowledge briefing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 
 export default function Header() {
   return (
-    <header className="bg-surface text-on-surface flex justify-between items-center w-full px-8 h-16 border-b border-outline-variant fixed top-0 right-0 left-[280px] z-50">
+    <header className="bg-surface text-on-surface flex justify-between items-center px-8 h-16 border-b border-outline-variant fixed top-0 right-0 left-[280px] z-50">
       <div className="flex items-center gap-4">
         <span className="text-lg font-bold text-primary">CapitalStream</span>
         <div className="h-6 w-px bg-outline-variant mx-2" />

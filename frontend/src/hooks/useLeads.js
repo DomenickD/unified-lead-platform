@@ -6,12 +6,17 @@ export function useLeads() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    leadsApi.list()
+  function refresh() {
+    setLoading(true)
+    return leadsApi.list()
       .then(setLeads)
       .catch(setError)
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    refresh()
   }, [])
 
-  return { leads, loading, error }
+  return { leads, loading, error, refresh }
 }
