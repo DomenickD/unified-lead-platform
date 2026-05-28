@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 const navItems = [
   { to: '/dashboard', icon: 'dashboard', label: 'Dashboard' },
@@ -9,6 +9,13 @@ const navItems = [
 ]
 
 export default function Sidebar() {
+  const navigate = useNavigate()
+
+  const handleSupportClick = (e) => {
+    e.preventDefault()
+    alert('Support Center:\nFor inquiries, technical issues, or Floridian market exclusivity support, email us at support@capitalstream.com.')
+  }
+
   return (
     <aside className="bg-surface-container-low text-on-surface flex flex-col h-screen py-8 px-4 gap-2 border-r border-outline-variant fixed w-[280px] top-0 left-0 z-40">
       <div className="mb-8 px-2">
@@ -62,7 +69,10 @@ export default function Sidebar() {
       </div>
 
       <div className="mt-auto pt-8 border-t border-outline-variant space-y-1">
-        <button className="w-full bg-primary text-on-primary py-3 px-4 rounded text-[11px] font-semibold tracking-widest uppercase mb-4 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+        <button 
+          onClick={() => navigate('/funding')}
+          className="w-full bg-primary text-on-primary py-3 px-4 rounded text-[11px] font-semibold tracking-widest uppercase mb-4 flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+        >
           <span className="material-symbols-outlined text-[18px]">add_circle</span>
           New Funding Request
         </button>
@@ -72,7 +82,11 @@ export default function Sidebar() {
           <span className="text-[11px] font-semibold tracking-widest uppercase">Settings</span>
         </NavLink>
 
-        <a href="#" className="flex items-center gap-2 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all">
+        <a 
+          href="#" 
+          onClick={handleSupportClick}
+          className="flex items-center gap-2 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all"
+        >
           <span className="material-symbols-outlined">contact_support</span>
           <span className="text-[11px] font-semibold tracking-widest uppercase">Support</span>
         </a>

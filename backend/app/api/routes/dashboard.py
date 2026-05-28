@@ -15,15 +15,15 @@ _MOCK_METRICS = DashboardMetrics(
 )
 
 _MOCK_REGIONS = [
-    RegionTrend(region="South Florida (Miami/FtL)", state="FL", change_pct=24.0),
-    RegionTrend(region="Austin-San Antonio Corridor", state="TX", change_pct=18.0),
-    RegionTrend(region="Phoenix Tech Belt", state="AZ", change_pct=-4.0),
+    RegionTrend(region="Tampa Bay (Hillsborough/Pinellas)", state="FL", change_pct=35.0),
+    RegionTrend(region="South Florida (Miami/Dade)", state="FL", change_pct=18.0),
+    RegionTrend(region="Central Florida (Orlando/Orange)", state="FL", change_pct=12.0),
 ]
 
 _MOCK_PIPELINES = [
-    SectorPipeline(sector="Real Estate", total=1_420_000_000, allocated_pct=65.0),
-    SectorPipeline(sector="Construction", total=942_000_000, allocated_pct=42.0),
-    SectorPipeline(sector="General Funding", total=478_000_000, allocated_pct=89.0),
+    SectorPipeline(sector="Real Estate", total=420_000_000, allocated_pct=65.0),
+    SectorPipeline(sector="Construction", total=242_000_000, allocated_pct=42.0),
+    SectorPipeline(sector="Funding", total=178_000_000, allocated_pct=89.0),
 ]
 
 
