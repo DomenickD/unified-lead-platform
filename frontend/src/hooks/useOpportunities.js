@@ -6,12 +6,17 @@ export function useOpportunities() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    opportunitiesApi.list()
+  function refresh() {
+    setLoading(true)
+    return opportunitiesApi.list()
       .then(setOpportunities)
       .catch(setError)
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    refresh()
   }, [])
 
-  return { opportunities, loading, error }
+  return { opportunities, loading, error, refresh }
 }

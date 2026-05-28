@@ -1,8 +1,14 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
-export default function Header() {
+export default function Header({ onLogout }) {
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    onLogout()
+    navigate('/login', { replace: true })
+  }
   return (
-    <header className="bg-surface text-on-surface flex justify-between items-center w-full px-8 h-16 border-b border-outline-variant fixed top-0 right-0 left-[280px] z-50">
+    <header className="bg-surface text-on-surface flex justify-between items-center px-8 h-16 border-b border-outline-variant fixed top-0 right-0 left-[280px] z-50">
       <div className="flex items-center gap-4">
         <span className="text-lg font-bold text-primary">CapitalStream</span>
         <div className="h-6 w-px bg-outline-variant mx-2" />
@@ -40,6 +46,14 @@ export default function Header() {
         <div className="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center font-bold text-sm text-primary">
           U
         </div>
+
+        <button
+          onClick={handleLogout}
+          title="Sign out"
+          className="flex items-center gap-1 text-sm text-on-surface-variant hover:text-secondary hover:bg-surface-container-low px-2 py-1.5 rounded transition-colors"
+        >
+          <span className="material-symbols-outlined text-xl">logout</span>
+        </button>
       </div>
     </header>
   )

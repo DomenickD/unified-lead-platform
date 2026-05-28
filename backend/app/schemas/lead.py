@@ -27,6 +27,8 @@ class LeadBase(BaseModel):
     deal_size: float
     status: LeadStatus
     confidence: Optional[float] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class LeadCreate(LeadBase):
@@ -40,6 +42,8 @@ class LeadUpdate(BaseModel):
     deal_size: Optional[float] = None
     status: Optional[LeadStatus] = None
     confidence: Optional[float] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class Lead(LeadBase):
