@@ -59,17 +59,22 @@ class BrightDataAccelaScraper:
                 page = await context.new_page()
 
                 logger.info(f"Navigating to {target_url}...")
-                await page.goto(target_url, timeout=45000, wait_until="networkidle")
+                try:
+                    await page.goto(target_url, timeout=45000, wait_until="commit")
+                except Exception as e:
+                    logger.warning(f"Navigation to {target_url} did not fully load, but proceeding: {e}")
 
                 # Fill Start Date (Accela standard ASP.NET text field ID, restricted to type="text" to avoid hidden states)
                 logger.info(f"Filling start date field with: {start_date_str}")
                 start_date_selector = 'input[type="text"][id*="txtGSStartDate"]'
-                await page.wait_for_selector(start_date_selector, timeout=15000)
+                await page.wait_for_selector(start_date_selector, timeout=30000)
+                # Clear standard ASP.NET masked field before filling to prevent duplicate characters/formatting issues
+                await page.locator(start_date_selector).first.evaluate("el => el.value = ''")
                 await page.locator(start_date_selector).first.fill(start_date_str)
 
                 # Click Search button (Accela standard ASP.NET search button ID)
                 logger.info("Clicking Search...")
-                search_button_selector = 'a[id*="btnSearch"]:visible, input[id*="btnSearch"]:visible, a:has-text("Search"):visible'
+                search_button_selector = 'a[id*="btnNewSearch"], a:has-text("Search"):visible'
                 await page.locator(search_button_selector).first.click()
 
                 # Wait for search results table to render
@@ -135,4 +140,14 @@ class BrightDataAccelaScraper:
 
         except Exception as exc:
             logger.error(f"Error during Bright Data Accela scraping execution: {exc}")
+            try:
+                # Capture screenshot to debug the failure state
+                error_screenshot = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "error_screenshot.png")
+                if 'page' in locals() and not page.is_closed():
+                    title = await page.title()
+                    logger.error(f"Page title at error: '{title}'")
+                    await page.screenshot(path=error_screenshot)
+                    logger.info(f"Saved error screenshot to {error_screenshot}")
+            except Exception as ss_exc:
+                logger.error(f"Could not save error screenshot: {ss_exc}")
             return []
