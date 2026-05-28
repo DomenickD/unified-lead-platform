@@ -327,6 +327,20 @@ async def fetch_all_tampa_construction_permits() -> list[dict[str, Any]]:
     )
 
     combined = city_results + county_results
+
+    # If Bright Data Scraping Browser WebSocket URL is configured, run the live web scraper
+    ws_url = os.getenv("BRIGHT_DATA_BROWSER_WS", "")
+    if ws_url:
+        try:
+            logger.info("BRIGHT_DATA_BROWSER_WS is configured. Running live Accela browser scraper...")
+            from app.integrations.bright_data_scraper import BrightDataAccelaScraper
+            scraper = BrightDataAccelaScraper(ws_url)
+            scraped_permits = await scraper.scrape_tampa_permits()
+            if scraped_permits:
+                combined = scraped_permits + combined
+        except Exception as exc:
+            logger.error(f"Failed to run Bright Data Accela scraper: {exc}")
+
     return _deduplicate(combined)
 
 

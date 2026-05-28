@@ -60,3 +60,23 @@ For the backend to pick up the new environment variables, restart your servers:
    ./start.sh
    ```
 3. Open the **Opportunity Discovery** page, click the **Construction Permits (Live)** tab, and verify that the app now reads directly from the live municipal databases!
+
+---
+
+### Step 5: (Optional) Setup Bright Data Scraping Browser for Real-Time Permits
+Since the City of Tampa uses Accela, we have added a web scraping module that logs in/queries the citizen portal over WebSockets via Bright Data to grab live permit data.
+1. Log in to your **Bright Data Dashboard**.
+2. Navigate to **Proxies & Scraping Infrastructure** and click **Add** -> select **Scraping Browser** (designed for Puppeteer/Playwright).
+3. Once the Scraping Browser zone is created, click on it and locate your **Connection parameters**.
+4. In your [backend/.env](file:///C:/Users/Domenick%20Dobbs/Desktop/Coding/16%202026%20CodeSpace/unified-lead-platform/backend/.env) file, fill in the following parameters using your Bright Data credentials:
+   * **BRIGHT_DATA_CUSTOMER_ID**: Your account ID, visible in the top-right of your Bright Data header (usually starts with `brd-customer-xxxx`).
+   * **BRIGHT_DATA_ZONE_NAME**: The name of the Scraping Browser zone you just created (e.g. `scraping_browser1`).
+   * **BRIGHT_DATA_ZONE_PASSWORD**: The password/API key for that specific browser zone (found under the connection settings credentials tab).
+5. Open your [backend/.env](file:///C:/Users/Domenick%20Dobbs/Desktop/Coding/16%202026%20CodeSpace/unified-lead-platform/backend/.env) and fill them in:
+   ```env
+   BRIGHT_DATA_CUSTOMER_ID=brd-customer-xxxx
+   BRIGHT_DATA_ZONE_NAME=scraping_browser1
+   BRIGHT_DATA_ZONE_PASSWORD=your_zone_password_or_api_key
+   ```
+6. Restart your application. When you sync the construction feed, the backend will automatically format the WebSocket connection string, launch the headless browser in Bright Data, crawl the Accela portal, and ingest live permit details!
+
