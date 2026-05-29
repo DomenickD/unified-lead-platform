@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import dashboard, leads, opportunities, funding
 from app.api.routes import construction_feeds
 from app.api.routes import grants
+from app.api.routes import real_estate
 
 app = FastAPI(title="CapitalStream API", version="0.1.0")
 
@@ -30,6 +31,7 @@ app.include_router(
     tags=["construction-feeds"],
 )
 app.include_router(grants.router, prefix="/api/grants", tags=["grants"])
+app.include_router(real_estate.router, prefix="/api/real-estate", tags=["real-estate"])
 
 
 @app.get("/health")
