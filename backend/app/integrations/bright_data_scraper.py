@@ -64,10 +64,26 @@ class BrightDataAccelaScraper:
                 except Exception as e:
                     logger.warning(f"Navigation to {target_url} did not fully load, but proceeding: {e}")
 
+                # Wait for ASP.NET ViewState to be fully loaded and populated to avoid session/viewstate errors on postback
+                logger.info("Waiting for ASP.NET ViewState to load...")
+                try:
+                    await page.wait_for_selector('input[name="__VIEWSTATE"]', timeout=20000)
+                    await page.wait_for_function(
+                        'document.querySelector(\'input[name="__VIEWSTATE"]\')?.value?.length > 100',
+                        timeout=10000
+                    )
+                    logger.info("ViewState is fully loaded.")
+                except Exception as vs_err:
+                    logger.warning(f"Timeout waiting for ViewState validation: {vs_err}")
+
                 # Fill Start Date (Accela standard ASP.NET text field ID, restricted to type="text" to avoid hidden states)
-                logger.info(f"Filling start date field with: {start_date_str}")
                 start_date_selector = 'input[type="text"][id*="txtGSStartDate"]'
                 await page.wait_for_selector(start_date_selector, timeout=30000)
+                
+                # Small settle delay to ensure ASP.NET event handlers are bound to elements
+                await page.wait_for_timeout(2000)
+
+                logger.info(f"Filling start date field with: {start_date_str}")
                 # Clear standard ASP.NET masked field before filling to prevent duplicate characters/formatting issues
                 await page.locator(start_date_selector).first.evaluate("el => el.value = ''")
                 await page.locator(start_date_selector).first.fill(start_date_str)
